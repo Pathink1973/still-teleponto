@@ -143,6 +143,16 @@ function App() {
     live = useRef(s),
     position = useRef(0);
   live.current = s;
+  function organizeCurrentText() {
+    const organized = organizeText(draft);
+    if (organized === draft) {
+      setNotice(draft.trim() ? "O texto já está organizado para leitura." : "Cola ou escreve um texto para o organizar.");
+      return;
+    }
+    setPasteUndo({ id, original: draft, organized });
+    setDraft(organized);
+    setScripts(items => items.map(item => item.id === id ? { ...item, body: organized, updatedAt: Date.now() } : item));
+  }
   function save() {
     if (script && draft !== script.body)
       setScripts((p) =>
@@ -602,15 +612,19 @@ function App() {
                         type="checkbox"
                         role="switch"
                         checked={autoPaste}
-                        onChange={(event) => setAutoPaste(event.target.checked)}
+                        onChange={(event) => {
+                          setAutoPaste(event.target.checked);
+                          if (event.target.checked) organizeCurrentText();
+                        }}
                       />
                       <span className="switch-track" aria-hidden="true" />
                       <span>Organizar ao colar</span>
                     </label>
+                    <button className="organize-now" onClick={organizeCurrentText} disabled={!draft.trim()}>Organizar texto agora</button>
                     <p id="paste-help">
                       {autoPaste
-                        ? "Junta linhas partidas e cria blocos de leitura. Mantém as tuas palavras."
-                        : "Mantém o texto tal como o colas. Organiza-o à tua maneira."}
+                        ? "Ao ligar, organiza o texto atual e as próximas colagens. Mantém as tuas palavras."
+                        : "Mantém a colagem original. Liga para organizar também o texto que já escreveste."}
                     </p>
                   </div>
                   <textarea

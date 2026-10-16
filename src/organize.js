@@ -15,26 +15,30 @@ export function organizeText(input) {
     let prose = [];
     const flush = () => {
       if (!prose.length) return;
-      const sentences = Array.from(segmenter.segment(prose.join(" ")), (part) =>
+      const segments = Array.from(segmenter.segment(prose.join(" ")), (part) =>
         part.segment.trim(),
       ).filter(Boolean);
-      let group = [],
-        count = 0;
-      for (const sentence of sentences) {
-        const length = sentence.split(/\s+/u).length;
-        if (
-          group.length &&
-          (count + length > 40 ||
-            group.join(" ").length + sentence.length > 250)
-        ) {
-          result.push(group.join(" "));
-          group = [];
-          count = 0;
-        }
-        group.push(sentence);
-        count += length;
+      const sentences = [];
+      for (const segment of segments) {
+        const previous = sentences.at(-1);
+        if (previous && /(?:\b(?:Sr|Sra|Srª|Dr|Dra|Drª|Prof|Profa|Eng|Arq|Exmo|Exma|Av|pág|vol|nº|etc)|\b\p{Lu})\.$/iu.test(previous)) {
+          sentences[sentences.length - 1] = previous + " " + segment;
+        } else sentences.push(segment);
       }
-      if (group.length) result.push(group.join(" "));
+      // A paragraph per sentence gives a visible reading rhythm even for short text.
+      for (const sentence of sentences) {
+        // Prefer existing breathing points for long sentences. No words are rewritten.
+        const clauses = sentence.split(/(?<=[,;:—–])\s+/u);
+        let group = [];
+        for (const clause of clauses) {
+          group.push(clause);
+          if (sentence.split(/\s+/u).length > 28 && group.join(" ").split(/\s+/u).length >= 12) {
+            result.push(group.join(" "));
+            group = [];
+          }
+        }
+        if (group.length) result.push(group.join(" "));
+      }
       prose = [];
     };
     for (const line of lines) {

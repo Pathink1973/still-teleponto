@@ -1088,3 +1088,4 @@ input[type="range"] {
     transition: none;
   }
 }
+.organize-now{flex-shrink:0;font-size:12px;min-height:44px;color:#d7eba7}.organize-now:disabled{opacity:.45;cursor:default}.paste-options{flex-wrap:wrap}.paste-options p{flex:1;min-width:180px}@media(max-width:1000px){.paste-options .organize-now{align-self:stretch}.paste-options p{min-width:0}}

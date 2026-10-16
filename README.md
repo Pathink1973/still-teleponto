@@ -66,9 +66,9 @@ Só aparece se o navegador disponibilizar `SpeechRecognition` ou `webkitSpeechRe
 
 ## Organizar ao colar
 
-O interruptor «Organizar ao colar» começa desligado e a preferência fica guardada localmente. Desligado, a colagem funciona normalmente. Ligado, limpa espaços repetidos, junta linhas partidas e cria blocos curtos entre frases. Conserva as palavras, a pontuação, os títulos separados por parágrafos, títulos Markdown, linhas em maiúsculas e marcadores de listas. Não impõe um número fixo de caracteres por linha nem reescreve o conteúdo. É uma organização por regras locais: revê sempre textos com estrutura complexa, tabelas ou poesia.
+O interruptor «Organizar ao colar» começa desligado e a preferência fica guardada localmente. Desligado, a colagem funciona normalmente. Ao ligar, organiza imediatamente o texto que já está no editor e ativa a organização das próximas colagens. O botão «Organizar texto agora» permite repetir a organização sem ter de voltar a colar. Limpa espaços repetidos, junta linhas partidas e coloca cada frase num parágrafo. Nas frases longas, aproveita pausas existentes na pontuação para criar blocos de leitura. Conserva as palavras, a pontuação, os títulos separados por parágrafos, títulos Markdown, linhas em maiúsculas e marcadores de listas. Não impõe um número fixo de caracteres por linha nem reescreve o conteúdo. É uma organização por regras locais: revê sempre textos com estrutura complexa, tabelas ou poesia.
 
-Depois de uma colagem que altere a organização, «Desfazer organização» recupera o conteúdo colado original, incluindo os espaços e as quebras de linha. Fica disponível até voltares a editar esse texto. A organização incide apenas no conteúdo colado, respeitando a seleção atual.
+Depois de organizar o texto atual ou uma nova colagem, «Desfazer organização» recupera o conteúdo colado original, incluindo os espaços e as quebras de linha. Fica disponível até voltares a editar esse texto. A organização incide apenas no conteúdo colado, respeitando a seleção atual.
 
 ## Telemóvel, iPad e instalação
 

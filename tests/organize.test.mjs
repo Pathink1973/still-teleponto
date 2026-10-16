@@ -8,7 +8,7 @@ test("junta linhas partidas e limpa espaços sem alterar palavras", () => {
   const result = organizeText(original);
   assert.equal(
     result,
-    "Olá, mundo! Esta é uma frase partida a meio.\n\nOutro parágrafo.",
+    "Olá, mundo!\n\nEsta é uma frase partida a meio.\n\nOutro parágrafo.",
   );
   assert.equal(compact(result), compact(original));
 });
@@ -52,4 +52,16 @@ test("não corta frases longas, palavras hifenizadas, URLs ou decimais", () => {
 });
 test("texto vazio e espaços", () => {
   assert.equal(organizeText(" \r\n\t "), "");
+});
+
+test("texto corrido curto ganha um parágrafo por frase", () => {
+  const original = "Esta é a primeira ideia. Esta é a segunda ideia. E esta é a conclusão.";
+  assert.equal(organizeText(original), "Esta é a primeira ideia.\n\nEsta é a segunda ideia.\n\nE esta é a conclusão.");
+});
+test("frase longa usa pausas existentes sem perder pontuação", () => {
+  const original = "Este é um texto longo que queremos apresentar com muita calma e clareza, sem alterar as palavras que o autor escolheu para apresentar a sua mensagem, respeitando sempre o ritmo da leitura e o sentido de tudo o que está escrito.";
+  const result = organizeText(original);
+  assert.equal(compact(result), compact(original));
+  assert.ok(result.includes(",\n\n"));
+  assert.equal(organizeText(result), result);
 });
