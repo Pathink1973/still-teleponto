@@ -1,0 +1,33 @@
+{
+  "id": "/",
+  "name": "Still — Teleponto pessoal",
+  "short_name": "Still",
+  "description": "O teu teleponto pessoal em português de Portugal. Textos guardados apenas neste dispositivo.",
+  "lang": "pt-PT",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#111313",
+  "theme_color": "#111313",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
