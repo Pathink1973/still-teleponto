@@ -22,7 +22,7 @@ npm run preview
 
 ## Biblioteca
 
-Inclui um texto de exemplo em português. Cria textos, altera o título para lhes mudar o nome e escreve na área de texto simples. O corpo é guardado automaticamente quando sais do campo, mudas de texto ou abres o teleponto. A eliminação pede confirmação e não pode ser anulada.
+Inclui o exemplo «Três passos para gravar com teleponto», em português de Portugal. O novo exemplo é acrescentado uma vez às bibliotecas existentes, preservando textos pessoais; depois de o eliminares, não volta a aparecer automaticamente. Podes voltar a abri-lo através do tutorial ⓘ. Cria textos, altera o título para lhes mudar o nome e escreve na área de texto simples. O corpo é guardado automaticamente quando sais do campo, mudas de texto ou abres o teleponto. A eliminação pede confirmação e não pode ser anulada.
 
 Os textos ficam no `localStorage`, na chave `still.scripts`, com o formato `{id, title, body, updatedAt}`. A data `updatedAt` corresponde a milissegundos desde a época Unix. As definições ficam em `still.settings`. Os dados pertencem a este navegador e endereço, incluindo a porta. Limpar os dados do navegador elimina os textos; a navegação privada pode não os conservar. Mantém uma cópia dos textos importantes.
 
@@ -98,3 +98,8 @@ npm run build
 ```
 
 Os testes cobrem conservação de palavras e pontuação, limpeza de espaços, parágrafos, listas, abreviaturas, URLs e texto vazio. A câmara, microfone, gravação e instalação devem também ser experimentados nos dispositivos reais, porque o suporte depende do navegador.
+
+
+## Academia crIA e tutorial
+
+Os controlos usam a cor oficial `#82FBC0`. O rodapé apresenta «Academia crIA © Patricio Brito · 2026» com ligação direta para https://www.academiacria.pt. O ícone ⓘ no topo abre um tutorial com edição, organização, leitura, gravação, atalhos, instalação e privacidade. No teleponto, abrir o tutorial coloca a leitura em pausa. A janela mantém o foco no seu interior e pode ser fechada com Esc.

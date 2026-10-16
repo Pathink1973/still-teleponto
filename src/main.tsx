@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./style.css";
 import { organizeText } from "./organize.js";
 import { InstallApp } from "./InstallApp";
+import { Tutorial } from "./Tutorial";
 type Script = { id: string; title: string; body: string; updatedAt: number };
 type Settings = {
   speed: number;
@@ -22,11 +23,13 @@ const defaults: Settings = {
   opacity: 30,
   marker: 35,
 };
+const previousPortugueseSample =
+  "Respira fundo.\n\nNão precisas de acertar em todas as palavras. Só precisas de começar.\n\nEste é o teu espaço para encontrares o teu ritmo. Um lugar onde podes transformar palavras escritas numa mensagem com a tua voz.\n\nMantém o olhar perto da linha de leitura. Deixa que as palavras venham até ti. Se precisares de um momento, carrega na barra de espaços para fazer uma pausa.\n\nAbranda. Levanta o olhar. Deixa algum espaço entre as tuas ideias.\n\nAs melhores histórias nem sempre são as que fazem mais barulho. Às vezes, são as que se contam com um pouco mais de cuidado.\n\nComeça quando te sentires preparado.";
 const sample: Script = {
-  id: "welcome",
-  title: "Um momento para respirar",
+  id: "academy-example",
+  title: "Três passos para gravar com teleponto",
   updatedAt: Date.now(),
-  body: "Respira fundo.\n\nNão precisas de acertar em todas as palavras. Só precisas de começar.\n\nEste é o teu espaço para encontrares o teu ritmo. Um lugar onde podes transformar palavras escritas numa mensagem com a tua voz.\n\nMantém o olhar perto da linha de leitura. Deixa que as palavras venham até ti. Se precisares de um momento, carrega na barra de espaços para fazer uma pausa.\n\nAbranda. Levanta o olhar. Deixa algum espaço entre as tuas ideias.\n\nAs melhores histórias nem sempre são as que fazem mais barulho. Às vezes, são as que se contam com um pouco mais de cuidado.\n\nComeça quando te sentires preparado.",
+  body: "Olá!\n\nJá pensaste como seria gravar os teus vídeos sem precisares de decorar páginas e páginas de guião?\n\nCom o teleponto, olhas diretamente para a lente da câmara e manténs uma conversa natural com quem está a ver.\n\nHoje, vou mostrar-te três passos simples:\n\nPrimeiro: organiza o teu texto em frases curtas.\n\nSegundo: ajusta a velocidade de deslocamento do texto na tua aplicação ou no teu equipamento.\n\nTerceiro: sorri, fala com calma e olha para a câmara como se estivesses a falar com um amigo.\n\nSe queres poupar tempo nas tuas gravações, clica na ligação abaixo e descobre mais!",
 };
 function read<T>(key: string, fallback: T): T {
   try {
@@ -39,24 +42,32 @@ const originalSample =
   "Take a breath.\n\nYou don’t have to get every word perfect. You just have to begin.\n\nThis is your space to find your rhythm. A place to turn a few written words into something that sounds like you.\n\nKeep your eyes near the reading line. Let the words come to you. If you need a moment, press space to pause.\n\nSlow down. Look up. Leave a little room between your thoughts.\n\nThe best stories aren’t always the loudest. Sometimes, they’re the ones told with a little more care.\n\nReady when you are.";
 function loadScripts() {
   const data = read<Script[]>("still.scripts", [sample]);
-  return Array.isArray(data)
-    ? data
-        .filter(
-          (s) =>
-            s &&
-            typeof s.id === "string" &&
-            typeof s.title === "string" &&
-            typeof s.body === "string" &&
-            typeof s.updatedAt === "number",
-        )
-        .map((script) =>
-          script.id === "welcome" &&
-          script.title === "A little room to breathe" &&
-          script.body === originalSample
-            ? { ...script, title: sample.title, body: sample.body }
-            : script,
-        )
-    : [sample];
+  if (!Array.isArray(data)) return [sample];
+  const scripts = data
+    .filter(
+      (script) =>
+        script &&
+        typeof script.id === "string" &&
+        typeof script.title === "string" &&
+        typeof script.body === "string" &&
+        typeof script.updatedAt === "number",
+    )
+    .map((script) =>
+      script.id === "welcome" &&
+      ((script.title === "A little room to breathe" &&
+        script.body === originalSample) ||
+        (script.title === "Um momento para respirar" &&
+          script.body === previousPortugueseSample))
+        ? { ...sample, updatedAt: script.updatedAt }
+        : script,
+    );
+  // Seed this new example once; never overwrite personal scripts or restore it after deletion.
+  if (
+    !scripts.some((script) => script.id === sample.id) &&
+    read<number>("still.exampleVersion", 0) < 2
+  )
+    scripts.push(sample);
+  return scripts;
 }
 function loadSettings() {
   const saved = read<Partial<Settings>>("still.settings", {});
@@ -103,6 +114,13 @@ function App() {
   const [scripts, setScripts] = useState(loadScripts),
     [id, setId] = useState(() => loadScripts()[0]?.id || "");
   const script = scripts.find((s) => s.id === id);
+  useEffect(() => {
+    try {
+      localStorage.setItem("still.exampleVersion", "2");
+    } catch {
+      /* Storage errors are reported by the script persistence effect. */
+    }
+  }, []);
   const [draft, setDraft] = useState(script?.body || "");
   const [autoPaste, setAutoPaste] = useState(
     () => read<boolean>("still.autoPaste", false) === true,
@@ -146,12 +164,31 @@ function App() {
   function organizeCurrentText() {
     const organized = organizeText(draft);
     if (organized === draft) {
-      setNotice(draft.trim() ? "O texto já está organizado para leitura." : "Cola ou escreve um texto para o organizar.");
+      setNotice(
+        draft.trim()
+          ? "O texto já está organizado para leitura."
+          : "Cola ou escreve um texto para o organizar.",
+      );
       return;
     }
     setPasteUndo({ id, original: draft, organized });
     setDraft(organized);
-    setScripts(items => items.map(item => item.id === id ? { ...item, body: organized, updatedAt: Date.now() } : item));
+    setScripts((items) =>
+      items.map((item) =>
+        item.id === id
+          ? { ...item, body: organized, updatedAt: Date.now() }
+          : item,
+      ),
+    );
+  }
+  function openExample() {
+    save();
+    const existing = scripts.find((item) => item.id === sample.id);
+    if (!existing)
+      setScripts((items) => [...items, { ...sample, updatedAt: Date.now() }]);
+    setId(sample.id);
+    setDraft(existing?.body ?? sample.body);
+    setPasteUndo(null);
   }
   function save() {
     if (script && draft !== script.body)
@@ -541,6 +578,7 @@ function App() {
               </div>
               <div className="header-actions">
                 <span className="badge">◉ &nbsp; Privado por natureza</span>
+                <Tutorial onExample={openExample} />
                 <InstallApp />
               </div>
             </header>
@@ -620,7 +658,13 @@ function App() {
                       <span className="switch-track" aria-hidden="true" />
                       <span>Organizar ao colar</span>
                     </label>
-                    <button className="organize-now" onClick={organizeCurrentText} disabled={!draft.trim()}>Organizar texto agora</button>
+                    <button
+                      className="organize-now"
+                      onClick={organizeCurrentText}
+                      disabled={!draft.trim()}
+                    >
+                      Organizar texto agora
+                    </button>
                     <p id="paste-help">
                       {autoPaste
                         ? "Ao ligar, organiza o texto atual e as próximas colagens. Mantém as tuas palavras."
@@ -740,10 +784,16 @@ function App() {
                 <p>Cria um texto para começar.</p>
               </div>
             )}
-            <div className="bottom">
-              SEM NUVEM. SEM CONTAS. SÓ TU E AS TUAS PALAVRAS.
-              <span>STILL / 01</span>
-            </div>
+            <footer className="bottom">
+              <span>SEM NUVEM. SEM CONTAS. SÓ TU E AS TUAS PALAVRAS.</span>
+              <a
+                href="https://www.academiacria.pt"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Academia crIA © Patricio Brito · 2026 ↗
+              </a>
+            </footer>
           </main>
         </div>
       ) : (
@@ -791,7 +841,10 @@ function App() {
           <div className="prompt-top controls">
             <button onClick={exit}>← Biblioteca</button>
             <span>{script?.title}</span>
-            <button onClick={fullscreen}>⛶ Ecrã inteiro</button>
+            <div className="prompt-top-actions">
+              <Tutorial onOpen={() => setPlaying(false)} />
+              <button onClick={fullscreen}>⛶ Ecrã inteiro</button>
+            </div>
           </div>
           <div className="panel controls" onFocus={wake}>
             <div className="transport">
