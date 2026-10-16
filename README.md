@@ -1,5 +1,7 @@
 # Still — Teleponto pessoal
 
+[Abrir a aplicação](https://still-teleponto.vercel.app/) · [Código no GitHub](https://github.com/Pathink1973/still-teleponto)
+
 Aplicação local em português de Portugal, com Vite + React + TypeScript e CSS simples. Sem servidor de dados, contas, telemetria, sincronização, chamadas a APIs externas ou segredos. Não é necessário um ficheiro `.env`.
 
 ## Iniciar
@@ -69,6 +71,8 @@ O interruptor «Organizar ao colar» começa desligado e a preferência fica gua
 Depois de uma colagem que altere a organização, «Desfazer organização» recupera o conteúdo colado original, incluindo os espaços e as quebras de linha. Fica disponível até voltares a editar esse texto. A organização incide apenas no conteúdo colado, respeitando a seleção atual.
 
 ## Telemóvel, iPad e instalação
+
+Na primeira utilização em telemóvel, a letra começa em 44 px e o texto ocupa 88% da largura; no computador, começa em 64 px e 76%. As tuas definições guardadas têm sempre prioridade.
 
 A biblioteca adapta-se a ecrãs pequenos, com botões tácteis e lista horizontal de textos. No teleponto, «Definições e gravação» abre os controlos adicionais sem os manter sempre sobre a leitura. Inclui botões para avançar e recuar 3 segundos sem teclado. As margens respeitam as zonas seguras do ecrã e a altura adapta-se às barras do navegador.
 

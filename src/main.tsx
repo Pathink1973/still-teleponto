@@ -15,9 +15,9 @@ type Settings = {
 };
 const defaults: Settings = {
   speed: 45,
-  fontSize: 64,
+  fontSize: window.matchMedia("(max-width: 650px)").matches ? 44 : 64,
   lineHeight: 1.6,
-  width: 76,
+  width: window.matchMedia("(max-width: 650px)").matches ? 88 : 76,
   mirror: false,
   opacity: 30,
   marker: 35,
